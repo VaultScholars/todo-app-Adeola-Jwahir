@@ -59,26 +59,101 @@ EXPECTED OUTPUT OF renderTasks():
 // - Create an <li> for each task using createTaskElement()
 // - Add each <li> to the <ul>
 // - Show the empty state message when there are no tasks
-function renderTasks(tasks, listElement, emptyStateElement) {
-  // TODO: Implement rendering logic
-}
-
-
-// This function should:
+ // TODO: Implement rendering logic
+ // This function should:
 // - Create and return ONE <li> element following the structure above
 // - Contain the checkbox, title, optional meta info, and delete button
 // - Add the correct classes to each element
 // - Make the checkbox checked if the task is completed
 // - NOT add event listeners (app.js will handle that)
-function createTaskElement(task) {
-  // TODO: Implement element creation logic
-}
-
-
-
+// TODO: Implement element creation logic
 // This function should:
 // - Reset the form
 // - Put focus back on the task title input
+ // TODO: Reset the form and focus the title input
+// assets/js/dom.js
+
+function renderTasks(tasks, listElement, emptyStateElement) {
+    listElement.innerHTML = "";
+
+    if (tasks.length === 0) {
+        emptyStateElement.style.display = "block";
+        return;
+    }
+
+    emptyStateElement.style.display = "none";
+
+    for (let i = 0; i < tasks.length; i++) {
+        const task = tasks[i];
+        const taskElement = createTaskElement(task); 
+        listElement.appendChild(taskElement);
+    }
+}
+
+function createTaskElement(task) {
+    const listItem = document.createElement("li");
+    listItem.className = "task-item";
+    listItem.setAttribute("data-id", task.id);
+    
+    
+    if (task.completed) {
+        listItem.classList.add("completed");
+    }
+
+    const leftDiv = document.createElement("div");
+    leftDiv.className = "task-item-left";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "task-checkbox"; 
+
+    if (task.completed) {
+        checkbox.checked = true;
+    }
+
+    const mainDiv = document.createElement("div");
+    mainDiv.className = "task-main";
+
+    const titlePara = document.createElement("p"); 
+    titlePara.className = "task-title";
+    titlePara.textContent = task.title;
+
+    const metaPara = document.createElement("p"); 
+    metaPara.className = "task-meta";
+    
+    
+    let metaText = [];
+    if (task.category) metaText.push(task.category);
+    if (task.dueDate) metaText.push(task.dueDate);
+    metaPara.textContent = metaText.join(" • ");
+
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "task-actions";
+
+    const deleteButton = document.createElement("button"); 
+    deleteButton.type = "button"; 
+    deleteButton.className = "task-delete-btn"; 
+    deleteButton.textContent = "Delete";
+
+    // Build the structure
+    leftDiv.appendChild(checkbox);
+    mainDiv.appendChild(titlePara);
+    mainDiv.appendChild(metaPara);
+    leftDiv.appendChild(mainDiv);
+
+    actionsDiv.appendChild(deleteButton);
+
+    listItem.appendChild(leftDiv);
+    listItem.appendChild(actionsDiv);
+
+    return listItem;
+}
+
 function clearTaskForm(form) {
-  // TODO: Reset the form and focus the title input
+    form.reset();
+
+    const titleInput = form.querySelector("#task-title"); 
+    if (titleInput) {
+        titleInput.focus();
+    }
 }
